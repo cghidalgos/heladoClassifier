@@ -2,7 +2,7 @@
 
 ## Guía rápida de colaboración (para BoneML.ipynb)
 
-Esta guía explica cómo trabajar en equipo con ramas por persona, buenas prácticas para notebooks y comandos listos en zsh.
+Esta guía explica cómo trabajar en equipo con ramas por persona, buenas prácticas para notebooks.
 
 Resumen rápido
 - Cada persona trabaja en su rama: `user/<nombre>` (ej.: `user/samuel`).
