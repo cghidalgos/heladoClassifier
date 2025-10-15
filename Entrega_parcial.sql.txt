@@ -1,0 +1,163 @@
+-- ========-- =============================
+-- 1. CREACIÓN DE TABLAS
+-- =============================
+
+-- Tabla 'fama'
+CREATE TABLE IF NOT EXISTS fama (
+    id_fama SERIAL PRIMARY KEY,
+    rank INTEGER UNIQUE,
+    rating FLOAT,
+    release_year INTEGER
+);
+
+-- Tabla 'estudio'
+CREATE TABLE IF NOT EXISTS estudio (
+    id_estudio SERIAL PRIMARY KEY,
+    studio TEXT,
+    typerank TEXT,
+    UNIQUE (studio, typerank)
+);
+
+-- Tabla 'informacion' con claves foráneas
+CREATE TABLE IF NOT EXISTS informacion (
+    id_informacion SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    japanese_name TEXT,
+    episodes INTEGER,
+    release_season TEXT,
+    tags TEXT,
+    fama_id INTEGER,
+    estudio_id INTEGER,
+    CONSTRAINT fk_fama FOREIGN KEY (fama_id) REFERENCES fama(id_fama) ON DELETE SET NULL,
+    CONSTRAINT fk_estudio FOREIGN KEY (estudio_id) REFERENCES estudio(id_estudio) ON DELETE SET NULL
+);
+
+-- =============================
+-- 2. INSERTAR DATOS EN 'fama'
+-- =============================
+
+INSERT INTO fama (rank, rating, release_year) VALUES
+  (1, 4.6, 2021),
+  (2, 4.58, 2009),
+  (3, 4.57, 2019),
+  (4, 4.55, 2020),
+  (5, 4.53, 2016),
+  (6, 4.51, 2019),
+  (7, 4.48, 2021),
+  (8, 4.47, 2008),
+  (9, 4.45, 2019),
+  (10, 4.45, 2021)
+ON CONFLICT (rank) DO NOTHING;
+
+-- =============================
+-- 3. INSERTAR DATOS EN 'estudio'
+-- =============================
+
+INSERT INTO estudio (studio, typerank) VALUES
+  ('TMS Entertainment', 'TV   '),
+  ('Bones', 'TV   '),
+  ('WIT Studio', 'TV   '),
+  ('MAPPA', 'TV   '),
+  ('Production I.G', 'TV   '),
+  ('ufotable', 'TV   '),
+  ('8-Bit', 'TV   '),
+  ('Sunrise', 'TV   '),
+  ('CloverWorks', 'TV   ')
+ON CONFLICT (studio, typerank) DO NOTHING;
+
+-- =============================
+-- 4. INSERTAR DATOS EN 'informacion'
+-- CON id_fama Y id_estudio
+-- =============================
+
+INSERT INTO informacion (name, japanese_name, episodes, release_season, tags, fama_id, estudio_id) VALUES
+  ('Fruits Basket the Final Season', 'Fruits Basket the Final', 13, 'Spring',
+   'Drama, Fantasy, Romance, Shoujo, Animal Transformation, Contemporary Fantasy, Curse, Dysfunctional Families, Mental Illness, Orphans, Based on a Manga, Emotional Abuse,, Mature Themes,, Physical Abuse,, Suicide,, Violence,, Domestic Abuse',
+   (SELECT id_fama FROM fama WHERE rank = 1),
+   (SELECT id_estudio FROM estudio WHERE studio = 'TMS Entertainment')),
+
+  ('Fullmetal Alchemist: Brotherhood', 'Hagane no Renkinjutsushi: Full Metal Alchemist', 64, 'Spring',
+   'Action, Adventure, Drama, Fantasy, Mystery, Shounen, Conspiracy, Death of a Loved One, Military, Siblings, Based on a Manga, Animal Abuse,, Mature Themes,, Violence,, Domestic Abuse',
+   (SELECT id_fama FROM fama WHERE rank = 2),
+   (SELECT id_estudio FROM estudio WHERE studio = 'Bones')),
+
+  ('Attack on Titan 3rd Season: Part II', 'Shingeki no Kyojin Season 3: Part II', 10, 'Spring',
+   'Action, Fantasy, Horror, Shounen, Dark Fantasy, Isolated Society, Military, Outside World, Post-apocalyptic, Based on a Manga, Cannibalism,, Explicit Violence',
+   (SELECT id_fama FROM fama WHERE rank = 3),
+   (SELECT id_estudio FROM estudio WHERE studio = 'WIT Studio')),
+
+  ('Attack on Titan The Final Season', 'Shingeki no Kyojin The Final Season', 16, 'Winter',
+   'Action, Drama, Fantasy, Horror, Shounen, Dark Fantasy, Military, War, Based on a Manga, Explicit Violence,, Mature Themes,, Physical Abuse,, Suicide',
+   (SELECT id_fama FROM fama WHERE rank = 4),
+   (SELECT id_estudio FROM estudio WHERE studio = 'MAPPA')),
+
+  ('Haikyuu!! Karasuno High School vs Shiratorizawa Academy', 'Haikyuu!! Karasuno Koukou vs Shiratorizawa Gakuen Koukou', 10, 'Fall',
+   'Shounen, Sports, Animeism, School Club, School Life, Tournaments, Volleyball, Based on a Manga',
+   (SELECT id_fama FROM fama WHERE rank = 5),
+   (SELECT id_estudio FROM estudio WHERE studio = 'Production I.G')),
+
+  ('Demon Slayer: Kimetsu no Yaiba', 'Kimetsu no Yaiba', 26, 'Spring',
+   'Action, Adventure, Comedy, Drama, Fantasy, Shounen, Death of a Loved One, Demons, Historical, Martial Arts, Orphans, Siblings, Swordplay, Based on a Manga, Violence',
+   (SELECT id_fama FROM fama WHERE rank = 6),
+   (SELECT id_estudio FROM estudio WHERE studio = 'ufotable')),
+
+  ('That Time I Got Reincarnated as a Slime Season 2', 'Tensei Shitara Slime Datta Ken Season 2', 12, 'Winter',
+   'Action, Adventure, Fantasy, Shounen, Cheats, Demons, Isekai, Kingdom Building, Magic, Management, Modern Knowledge, Monsters, Person in a Strange World, Political, Reincarnation, RPG, Slimes, Based on a Manga',
+   (SELECT id_fama FROM fama WHERE rank = 7),
+   (SELECT id_estudio FROM estudio WHERE studio = '8-Bit')),
+
+  ('Code Geass: Lelouch of the Rebellion R2', 'Code Geass: Hangyaku no Lelouch R2', 25, 'Spring',
+   'Mecha, Sci Fi, Conspiracy, Mind Games, Overpowered Main Characters, Political, Psychological, Real Robot, Rebellions, Rivalries, Royalty, Secret Identity, Superpowers, Terrorism, Original Work',
+   (SELECT id_fama FROM fama WHERE rank = 8),
+   (SELECT id_estudio FROM estudio WHERE studio = 'Sunrise')),
+
+  ('The Promised Neverland', 'Yakusoku no Neverland', 12, 'Winter',
+   'Fantasy, Horror, Mystery, Sci Fi, Shounen, Dark Fantasy, Isolated Society, Mind Games, noitaminA, Orphans, Outside World, Psychological, Thriller, Based on a Manga, Mature Themes,, Domestic Abuse,, Self-Harm',
+   (SELECT id_fama FROM fama WHERE rank = 9),
+   (SELECT id_estudio FROM estudio WHERE studio = 'CloverWorks')),
+
+  ('That Time I Got Reincarnated as a Slime Season 2: Part II', 'Tensei Shitara Slime Datta Ken Season 2: Part II', 12, 'Summer',
+   'Action, Adventure, Fantasy, Shounen, Cheats, Demons, Isekai, Kingdom Building, Magic, Management, Modern Knowledge, Monsters, Person in a Strange World, Political, Reincarnation, RPG, Slimes, Based on a Manga, Physical Abuse',
+   (SELECT id_fama FROM fama WHERE rank = 10),
+   (SELECT id_estudio FROM estudio WHERE studio = '8-Bit'))
+ON CONFLICT (name) DO NOTHING;
+
+-- =============================
+-- 5. CONSULTAS FINALES
+-- =============================
+
+-- Consulta 1: Promedio de rating por estudio (solo animes con rating >= 4.5 y desde 2015)
+SELECT 
+    e.studio,
+    e.typerank,
+    COUNT(i.id_informacion) AS cantidad_animes,
+    ROUND(AVG(f.rating), 2) AS promedio_rating
+FROM 
+    informacion i
+JOIN 
+    fama f ON i.fama_id = f.id_fama
+JOIN 
+    estudio e ON i.estudio_id = e.id_estudio
+WHERE 
+    f.rating >= 4.5 AND f.release_year >= 2015
+GROUP BY 
+    e.studio, e.typerank
+ORDER BY 
+    promedio_rating DESC;
+
+-- Consulta 2: Animes con rating superior al promedio
+SELECT 
+    i.name,
+    f.rating,
+    f.release_year
+FROM 
+    informacion i
+JOIN 
+    fama f ON i.fama_id = f.id_fama
+WHERE 
+    f.rating > (
+        SELECT AVG(rating)
+        FROM fama
+    )
+ORDER BY 
+    f.rating DESC;
