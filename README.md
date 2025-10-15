@@ -39,3 +39,5 @@ git add BoneML.ipynb BoneML.py
 git commit -m "feat: descripción corta del cambio"
 git push origin user/samuel
 ```
+
+<span style="color:red;">cada persona debe crear su propio readme de su proyecto en su rama</span>
